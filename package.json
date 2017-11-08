@@ -21,8 +21,9 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "decentraland-commons": "https://github.com/decentraland/commons",
-    "express": "^4.16.2"
+    "decentraland-commons": "git+https://github.com/decentraland/commons.git#release",
+    "express": "^4.16.2",
+    "redux-saga": "^0.16.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
