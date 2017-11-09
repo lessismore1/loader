@@ -88,10 +88,10 @@ export default class ParcelsMap extends React.Component {
   }
 
   getGridLayer() {
-    const { tileSize } = this.props;
+    const { tileSize, parcelData } = this.props;
     const tiles = new L.GridLayer({ tileSize });
 
-    tiles.createTile = createTile.bind(tiles);
+    tiles.createTile = createTile.bind(tiles, parcelData);
 
     return tiles;
   }
@@ -122,8 +122,23 @@ export default class ParcelsMap extends React.Component {
 
 const OFFSET = 1024;
 
-function createTile(coords) {
+const NO_OWNER = '0x0000000000000000000000000000000000000000'
+
+const formatOwner = owner => owner.substr(2, 4) + '...' + owner.substr(38, 4)
+function createTile(parcelData, coords) {
   const tile = L.DomUtil.create("div", "leaflet-tile");
+  const x = coords.x - OFFSET
+  const y = coords.y - OFFSET
+  const parcel = parcelData[`${x},${y}`]
+  if (parcel) {
+    if (parcel.owner !== NO_OWNER) {
+      tile.innerHTML = `${x}, ${y}<br/>0x${formatOwner(parcel.owner)}<br/>content: ${parcel.metadata}`
+    } else {
+      tile.innerHTML = `${x}, ${y}, unclaimed`
+    }
+  } else {
+    tile.innerHTML = `${x}, ${y}<br/>loading...`
+  }
   const size = this.getTileSize();
 
   tile.style.width = size.x;

@@ -1,6 +1,4 @@
 import Web3 from 'web3'
-import { env } from 'decentraland-commons'
-import promisify from 'es6-promisify'
 
 import land from './LANDToken'
 import sale from './LANDTestSale'

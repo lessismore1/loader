@@ -1,7 +1,6 @@
 import { delay } from 'redux-saga'
 import { race, take, select, takeEvery, call, put, fork } from 'redux-saga/effects'
 import types from './types'
-import { selectors } from './reducers'
 
 import ethService from './ethereum'
 
@@ -85,9 +84,10 @@ export function* fetchBalance(action) {
 }
 
 export function* fetchBoard(action) {
-  const status = yield select(state => state.ethereum)
-  if (!status.success) {
-    return
+  let status = yield select(state => state.ethereum)
+  while (!status.success) {
+    yield delay(2000)
+    status = yield select(state => state.ethereum)
   }
   const { minX, maxX, minY, maxY } = action
   const next = i => i <= 0 ? (-i) + 1 : (-i)

@@ -20,3 +20,11 @@ export function parcelRangeChange(minX, maxX, minY, maxY) {
     minY, maxY
   };
 }
+
+export function clickParcel(x, y) {
+  return {
+    type: types.click,
+    x,
+    y
+  }
+}

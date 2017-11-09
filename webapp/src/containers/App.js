@@ -1,6 +1,7 @@
 import React from "react";
 import EthereumState from './EthereumState'
 import ParcelsMapContainer from './ParcelsMapContainer'
+import DisplayParcel from './DisplayParcel'
 import "./App.css";
 
 class App extends React.Component {
@@ -9,6 +10,7 @@ class App extends React.Component {
       <div className="App">
         <header className="App-header">
           <EthereumState />
+          <DisplayParcel />
         </header>
         <ParcelsMapContainer />
       </div>

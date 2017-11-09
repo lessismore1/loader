@@ -3,7 +3,12 @@ import types from "./types";
 export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
-  balance: state => state.balance
+  balance: state => state.balance,
+  display: state => ({
+    x: state.displayMenu.x,
+    y: state.displayMenu.y,
+    parcel: state.parcelStates[`${state.displayMenu.x},${state.displayMenu.y}`]
+  })
 }
 
 function ethereum(state = { loading: true }, action) {
@@ -62,8 +67,18 @@ function parcelStates(state = {}, action) {
   }
 }
 
+function displayMenu(state = {}, action) {
+  switch (action.type) {
+    case types.click:
+      return { x: action.x, y: action.y }
+    default:
+      return state
+  }
+}
+
 export default {
   ethereum,
   parcelStates,
-  balance
+  balance,
+  displayMenu
 }

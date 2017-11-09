@@ -32,5 +32,6 @@ export default {
   },
 
   parcelRangeChanged: "Parcel range changed",
-  launchEditor: 'Launch editor requested'
+  launchEditor: 'Launch editor requested',
+  click: 'Clicked'
 };

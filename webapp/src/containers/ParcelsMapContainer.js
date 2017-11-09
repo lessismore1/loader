@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { selectors } from "../reducers";
-import { parcelRangeChange } from "../actions";
+import { clickParcel, parcelRangeChange } from "../actions";
 
 import ParcelsMap from "../components/ParcelsMap";
 
@@ -17,6 +17,9 @@ class ParcelsMapContainer extends React.Component {
         Math.max(bounds.min.y, bounds.max.y)
       )
     }
+    this.onClick = (x, y) => {
+      this.props.clickParcel(x, y)
+    }
   }
 
   componentWillMount() {
@@ -30,13 +33,14 @@ class ParcelsMapContainer extends React.Component {
       zoom={10}
       bounds={[[-120.5, -20.5], [120.5, 20.5]]}
       tileSize={128}
-      onClick={(...args) => console.log("MAP CLICK", args)}
+      onClick={this.onClick}
       onMoveEnd={this.onMoveEnd}
+      parcelData={this.props.parcelStates}
     />
   }
 }
 
 export default connect(
   state => ({ parcelStates: selectors.getParcelStates(state) }),
-  { parcelRangeChange }
+  { parcelRangeChange, clickParcel }
 )(ParcelsMapContainer);
