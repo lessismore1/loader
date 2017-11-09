@@ -16,8 +16,10 @@ export function connectWeb3(address) {
 export function parcelRangeChange(minX, maxX, minY, maxY) {
   return {
     type: types.parcelRangeChanged,
-    minX, maxX,
-    minY, maxY
+    minX,
+    maxX,
+    minY,
+    maxY
   };
 }
 
@@ -26,7 +28,7 @@ export function clickParcel(x, y) {
     type: types.click,
     x,
     y
-  }
+  };
 }
 
 export function buyParcel(x, y) {
@@ -34,19 +36,19 @@ export function buyParcel(x, y) {
     type: types.buyParcel.request,
     x,
     y
-  }
+  };
 }
 
 export function selectLand(id) {
   return {
     type: types.selectLand,
     id
-  }
+  };
 }
 
 export function launchEditor(parcels) {
   return {
     type: types.launchEditor,
     parcels
-  }
+  };
 }

@@ -3,12 +3,13 @@ import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import L from "leaflet";
 
-import ethService from '../ethereum';
+import ethService from "../ethereum";
 import "./ParcelsMap.css";
 
 const MAP_ID = "map";
 
-L.Icon.Default.imagePath = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/images/";
+L.Icon.Default.imagePath =
+  "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/images/";
 
 export default class ParcelsMap extends React.Component {
   static propTypes = {
@@ -59,22 +60,22 @@ export default class ParcelsMap extends React.Component {
     return this.map;
   }
 
-  onMapClick = (event) => {
+  onMapClick = event => {
     const { x, y } = point.latLngToCartesian(event.latlng);
 
     this.props.onClick(x, y);
-  }
+  };
 
-  onMapMoveEnd = (event) => {
-    let bounds = {}
-    const mapBounds = this.map.getBounds()
-    const sw = mapBounds.getSouthWest()
-    bounds.min = point.latLngToCartesian(sw)
-    const ne = mapBounds.getNorthEast()
-    bounds.max = point.latLngToCartesian(ne)
-    const position = this.map.getCenter()
-    this.props.onMoveEnd({ bounds, position })
-  }
+  onMapMoveEnd = event => {
+    let bounds = {};
+    const mapBounds = this.map.getBounds();
+    const sw = mapBounds.getSouthWest();
+    bounds.min = point.latLngToCartesian(sw);
+    const ne = mapBounds.getNorthEast();
+    bounds.max = point.latLngToCartesian(ne);
+    const position = this.map.getCenter();
+    this.props.onMoveEnd({ bounds, position });
+  };
 
   getGridLayer() {
     const { tileSize, parcelData, selectedData } = this.props;
@@ -88,11 +89,13 @@ export default class ParcelsMap extends React.Component {
   getInitialCenter() {
     const { x, y } = this.props;
     const { lat, lng } = this.props;
-    return (!x || isNaN(x)) ? new L.LatLng(lat || 0, lng || 0) : point.cartesianToLatLng({ x, y });
+    return !x || isNaN(x)
+      ? new L.LatLng(lat || 0, lng || 0)
+      : point.cartesianToLatLng({ x, y });
   }
 
   panTo(x, y) {
-    this.map.panTo(point.cartesianToLatLng({ x, y }))
+    this.map.panTo(point.cartesianToLatLng({ x, y }));
   }
 
   bindMap(container) {
@@ -116,21 +119,21 @@ export default class ParcelsMap extends React.Component {
 
 const OFFSET = 1024;
 
-const NO_OWNER = '0x0000000000000000000000000000000000000000'
+const NO_OWNER = "0x0000000000000000000000000000000000000000";
 
-const formatOwner = owner => owner.substr(2, 4) + '...' + owner.substr(38, 4)
+const formatOwner = owner => owner.substr(2, 4) + "..." + owner.substr(38, 4);
 
 function createTile(parcelData, selectedData, coords) {
   const tile = L.DomUtil.create("div", "leaflet-tile");
-  const x = coords.x - OFFSET
-  const y = coords.y - OFFSET
+  const x = coords.x - OFFSET;
+  const y = coords.y - OFFSET;
 
   const unclaimed = "#EAEAEA";
-  const own = '#30D7A9';
-  const other = '#7FA8FF';
+  const own = "#30D7A9";
+  const other = "#7FA8FF";
   let color = unclaimed;
 
-  const parcel = parcelData[`${x},${y}`]
+  const parcel = parcelData[`${x},${y}`];
   if (parcel) {
     if (parcel.owner !== NO_OWNER) {
       if (parcel.owner === ethService.address) {
@@ -138,21 +141,24 @@ function createTile(parcelData, selectedData, coords) {
       } else {
         color = other;
       }
-      ReactDOM.render(<div>
-        {x}, {y}
-        <br/>
-        0x{formatOwner(parcel.owner)}
-        <br/>
-        content: {parcel.metadata}
-      </div>, tile)
+      ReactDOM.render(
+        <div>
+          {x}, {y}
+          <br />
+          0x{formatOwner(parcel.owner)}
+          <br />
+          content: {parcel.metadata}
+        </div>,
+        tile
+      );
     } else {
-      tile.innerHTML = `${x}, ${y}, unclaimed`
+      tile.innerHTML = `${x}, ${y}, unclaimed`;
     }
   } else {
-    tile.innerHTML = `${x}, ${y}<br/>loading...`
+    tile.innerHTML = `${x}, ${y}<br/>loading...`;
   }
   const size = this.getTileSize();
-  const selected = !!(selectedData && selectedData[`${x}, ${y}`])
+  const selected = !!(selectedData && selectedData[`${x}, ${y}`]);
 
   tile.style.width = size.x;
   tile.style.height = size.y;

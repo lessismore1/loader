@@ -1,4 +1,3 @@
-
 export default {
   connectWeb3: {
     request: "[Request] Connect to web3 provider",
@@ -32,7 +31,7 @@ export default {
   },
 
   parcelRangeChanged: "Parcel range changed",
-  launchEditor: 'Launch editor requested',
-  click: 'Clicked',
-  selectLand: 'Select Land'
+  launchEditor: "Launch editor requested",
+  click: "Clicked",
+  selectLand: "Select Land"
 };
