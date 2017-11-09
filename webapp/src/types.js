@@ -14,6 +14,7 @@ export default {
 
   fetchBalance: {
     request: "[Request] Fetch balance",
+    loadedBalance: "[Request] Amount loaded",
     success: "[Success] Fetch balance",
     failed: "[Failed] Fetch balance"
   },
@@ -24,10 +25,9 @@ export default {
     failed: "[Failed] Load parcel"
   },
 
-  fetchParcels: {
-    request: "[Request] Fetch parcels requested",
-    success: "[Success] Parcels retrieved",
-    failed: "[Failed] Failed to fetch parcels requested"
+  balanceParcel: {
+    success: "[Success] Balance parcel retrieved",
+    failed: "[Failed] Balance parcel fetch fail"
   },
 
   parcelRangeChanged: "Parcel range changed",
