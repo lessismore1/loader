@@ -28,3 +28,11 @@ export function clickParcel(x, y) {
     y
   }
 }
+
+export function buyParcel(x, y) {
+  return {
+    type: types.buyParcel.request,
+    x,
+    y
+  }
+}

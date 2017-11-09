@@ -10,6 +10,7 @@ export default function*() {
   yield takeEvery(types.buyParcel.request, buyParcel)
   yield takeEvery(types.parcelRangeChanged, fetchBoard)
   yield takeEvery(types.loadParcel.request, fetchParcel)
+  yield takeEvery(types.buyParcel.success, fetchParcel)
   yield takeEvery(types.fetchBalance.request, fetchBalance)
   yield takeEvery(types.launchEditor, launchEditor)
 
@@ -52,12 +53,12 @@ export function* buyParcel(action) {
   try {
     const result = yield call(async () => await ethService.buyParcel(action.x, action.y))
     if (result) {
-      yield put({ type: ethService.buyParcel.success })
+      yield put({ type: types.buyParcel.success, x: action.x, y: action.y })
     } else {
-      yield put({ type: ethService.buyParcel.failed })
+      yield put({ type: types.buyParcel.failed })
     }
   } catch(error) {
-    yield put({ type: ethService.buyParcel.failed, error })
+    yield put({ type: types.buyParcel.failed, error: error.message })
   }
 }
 

@@ -25,8 +25,11 @@ class Ethereum {
     this.sale.address = sale.address
 
     const call = (methods, name) => (...args) => methods[name](...args).call()
+    const transaction = (methods, name) => (...args) => methods[name](...args).send({
+      from: address
+    })
     this.methods = {
-      buy: call(this.sale.methods, 'buy'),
+      buy: transaction(this.sale.methods, 'buy'),
       balanceOf: call(this.land.methods, 'balanceOf'),
       buildTokenId: async (x, y) => (await call(this.land.methods, 'buildTokenId')(x, y)).toString('hex'),
       tokenByIndex: call(this.land.methods, 'tokenByIndex'),
@@ -42,7 +45,7 @@ class Ethereum {
   }
 
   buyParcel(x, y) {
-    return this.methods.buy(x, y)
+    return this.methods.buy(x, y, '')
   }
 
   getBalance() {
