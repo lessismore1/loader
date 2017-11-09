@@ -4,10 +4,12 @@ import { connect } from "react-redux";
 import { selectors } from '../reducers';
 import Balance from './Balance'
 
+import './EthereumState.css'
+
 class EthereumState extends React.Component {
   render() {
     if (this.props.success) {
-      return <div>
+      return <div className='ethereum'>
         <div>Connected</div>
         <Balance />
       </div>

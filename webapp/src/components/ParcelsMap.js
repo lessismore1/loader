@@ -50,7 +50,7 @@ export default class ParcelsMap extends React.Component {
     this.map.setMaxBounds(point.toLatLngBounds(bounds));
 
     this.map.on("click", this.onMapClick);
-    this.map.on("onmoveend", this.onMapMoveEnd);
+    this.map.on("moveend", this.onMapMoveEnd);
 
     return this.map;
   }
@@ -65,7 +65,7 @@ export default class ParcelsMap extends React.Component {
     this.marker = L.marker(event.latlng, { opacity: 0.01 });
 
     this.marker
-      .bindTooltip(`${x},${y}`, {
+      .bindPopup(`${x},${y}`, {
         className: "parcel-tooltip",
         direction: "top",
         offset: new L.Point(-2, 10)
@@ -79,14 +79,12 @@ export default class ParcelsMap extends React.Component {
 
   onMapMoveEnd = (event) => {
     let bounds = {}
-    const position = point.latLngToCartesian(event.latlng)
-
     const mapBounds = this.map.getBounds()
     const sw = mapBounds.getSouthWest()
     bounds.min = point.latLngToCartesian(sw)
-    const ne = bounds.getNorthWest()
+    const ne = mapBounds.getNorthEast()
     bounds.max = point.latLngToCartesian(ne)
-    this.props.onMoveEnd({ position, bounds })
+    this.props.onMoveEnd({ bounds })
   }
 
   getGridLayer() {

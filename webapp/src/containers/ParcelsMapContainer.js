@@ -10,12 +10,17 @@ class ParcelsMapContainer extends React.Component {
   constructor(...args) {
     super(...args)
     this.onMoveEnd = ({ bounds }) => {
-      this.props.parcelRangeChange(bounds.min.x, bounds.max.x, bounds.min.y, bounds.max.y)
+      this.props.parcelRangeChange(
+        Math.min(bounds.min.x, bounds.max.x),
+        Math.max(bounds.min.x, bounds.max.x),
+        Math.min(bounds.min.y, bounds.max.y),
+        Math.max(bounds.min.y, bounds.max.y)
+      )
     }
   }
 
   componentWillMount() {
-    this.props.parcelRangeChange(-10, 10, -10, 10)
+    this.props.parcelRangeChange(-5, 5, -4, 4)
   }
 
   render() {
@@ -23,7 +28,7 @@ class ParcelsMapContainer extends React.Component {
       x={0}
       y={0}
       zoom={10}
-      bounds={[[-20.5, -20.5], [20.5, 20.5]]}
+      bounds={[[-120.5, -20.5], [120.5, 20.5]]}
       tileSize={128}
       onClick={(...args) => console.log("MAP CLICK", args)}
       onMoveEnd={this.onMoveEnd}

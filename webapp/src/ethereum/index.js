@@ -26,15 +26,15 @@ class Ethereum {
     this.sale = new this._web3.eth.Contract(sale.abi, sale.address)
     this.sale.address = sale.address
 
-    const call = (methods, name) => (args) => methods[name](args).call()
+    const call = (methods, name) => (...args) => methods[name](...args).call()
     this.methods = {
       buy: call(this.sale.methods, 'buy'),
       balanceOf: call(this.land.methods, 'balanceOf'),
+      buildTokenId: async (x, y) => (await call(this.land.methods, 'buildTokenId')(x, y)).toString('hex'),
       tokenByIndex: call(this.land.methods, 'tokenByIndex'),
       landMetadata: call(this.land.methods, 'landMetadata'),
       ownerOfLand: call(this.land.methods, 'ownerOfLand'),
     }
-    debugger;
 
     return true
   }
@@ -76,9 +76,14 @@ class Ethereum {
     return {
       x,
       y,
+      hash: await this.methods.buildTokenId(x, y),
       owner: await this.methods.ownerOfLand(x, y),
       metadata: await this.methods.landMetadata(x, y)
     }
+  }
+
+  async getMany(parcels) {
+    return Promise.all(parcels.map(parcel => this.getParcelData(parcel.x, parcel.y)))
   }
 
   async getOwnedParcel(index) {
@@ -94,4 +99,6 @@ class Ethereum {
   }
 }
 
-export default new Ethereum()
+const ethService = new Ethereum()
+
+export default ethService

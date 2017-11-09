@@ -1,5 +1,5 @@
 import { delay } from 'redux-saga'
-import { select, takeEvery, call, put } from 'redux-saga/effects'
+import { race, take, select, takeEvery, call, put, fork } from 'redux-saga/effects'
 import types from './types'
 import { selectors } from './reducers'
 
@@ -14,7 +14,21 @@ export default function*() {
   yield takeEvery(types.fetchBalance.request, fetchBalance)
   yield takeEvery(types.launchEditor, launchEditor)
 
+  yield fork(initialLoad)
   yield(put({ type: types.connectWeb3.request }))
+}
+
+export function* initialLoad() {
+  let { connected, moved } = yield race({
+    connected: take(types.connectWeb3.success),
+    moved: take(types.parcelRangeChanged)
+  })
+  if (moved) {
+    connected = yield take(types.connectWeb3.success)
+  } else {
+    moved = yield take(types.parcelRangeChanged)
+  }
+  fetchBalance(moved)
 }
 
 export function* connectWeb3() {
@@ -71,25 +85,26 @@ export function* fetchBalance(action) {
 }
 
 export function* fetchBoard(action) {
-  const state = yield select(selectors.ethereumState)
-  if (!state.success) {
+  const status = yield select(state => state.ethereum)
+  if (!status.success) {
     return
   }
   const { minX, maxX, minY, maxY } = action
   const next = i => i <= 0 ? (-i) + 1 : (-i)
   const avgX = Math.floor((minX + maxX) / 2)
   const avgY = Math.floor((minY + maxY) / 2)
-  for (let i = 0, x = 0; i++, x = next(x); minX + i <= maxX) {
-   console.log(i, x)
-   // for (let j = 0, y = 0; j++, y = next(y); minY + j <= maxY) {
-   //   yield put({ type: types.loadParcel.request, x: x + avgX, y: y + avgY })
-   //   try {
-   //     const parcel = yield call(async () => await ethService.getParcelData(x + avgX, y + avgY))
-   //     yield put({ type: types.loadParcel.success, parcel })
-   //   } catch (error) {
-   //     yield put({ type: types.loadParcel.failed, error })
-   //   }
-   // }
+  const parcels = []
+  for (let i = 0, x = 0; i <= maxX - minX + 1; i++, x = next(x)) {
+    for (let j = 0, y = 0; j <= maxY - minY + 1; j++, y = next(y)) {
+      parcels.push({x: x + avgX, y: y + avgY})
+    }
+  }
+  console.log(parcels)
+  try {
+    const result = yield call(async () => await ethService.getMany(parcels))
+    yield put({ type: types.loadParcel.many, parcels: result })
+  } catch(error) {
+    yield put({ type: types.loadParcel.failed, error: error.message })
   }
 }
 

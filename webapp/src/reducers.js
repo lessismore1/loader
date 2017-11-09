@@ -46,11 +46,17 @@ function balance(state = {}, action) {
 function parcelStates(state = {}, action) {
   switch (action.type) {
     case types.loadParcel.request:
-      return { ...state, [action.coordinate]: { loading: true } }
+      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: { loading: true } }
+    case types.loadParcel.many:
+      const newState = {...state}
+      action.parcels.forEach(parcel => {
+        newState[`${parcel.x},${parcel.y}`] = parcel
+      })
+      return newState
     case types.loadParcel.success:
-      return { ...state, [action.coordinate]: action.parcel }
+      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: action.parcel }
     case types.loadParcel.failed:
-      return { ...state, [action.coordinate]: { error: action.error } }
+      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: { error: action.error } }
     default:
       return state
   }

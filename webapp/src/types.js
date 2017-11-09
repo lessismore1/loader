@@ -21,6 +21,7 @@ export default {
 
   loadParcel: {
     request: "[Request] Load parcel",
+    many: "[Multiple Success] Load parcel",
     success: "[Success] Load parcel",
     failed: "[Failed] Load parcel"
   },
