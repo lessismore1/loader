@@ -1,7 +1,9 @@
 import React from "react";
+import ReactDOM from "react-dom";
 import PropTypes from "prop-types";
 import L from "leaflet";
 
+import ethService from '../ethereum';
 import "./ParcelsMap.css";
 
 const MAP_ID = "map";
@@ -10,8 +12,10 @@ L.Icon.Default.imagePath = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3
 
 export default class ParcelsMap extends React.Component {
   static propTypes = {
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
+    x: PropTypes.number,
+    y: PropTypes.number,
+    lat: PropTypes.number,
+    lng: PropTypes.number,
     bounds: PropTypes.arrayOf(PropTypes.array),
     zoom: PropTypes.number.isRequired,
     tileSize: PropTypes.number.isRequired,
@@ -39,7 +43,7 @@ export default class ParcelsMap extends React.Component {
     const { bounds, zoom } = this.props;
 
     this.map = new L.Map(MAP_ID, {
-      center: this.getCenter(),
+      center: this.getInitialCenter(),
       minZoom: zoom,
       maxZoom: zoom,
       zoom: zoom,
@@ -58,22 +62,6 @@ export default class ParcelsMap extends React.Component {
   onMapClick = (event) => {
     const { x, y } = point.latLngToCartesian(event.latlng);
 
-    if (this.marker) {
-      this.map.removeLayer(this.marker);
-    }
-
-    this.marker = L.marker(event.latlng, { opacity: 0.01 });
-
-    this.marker
-      .bindPopup(`${x},${y}`, {
-        className: "parcel-tooltip",
-        direction: "top",
-        offset: new L.Point(-2, 10)
-      })
-      .addTo(this.map);
-
-    this.marker.openTooltip();
-
     this.props.onClick(x, y);
   }
 
@@ -84,7 +72,8 @@ export default class ParcelsMap extends React.Component {
     bounds.min = point.latLngToCartesian(sw)
     const ne = mapBounds.getNorthEast()
     bounds.max = point.latLngToCartesian(ne)
-    this.props.onMoveEnd({ bounds })
+    const position = this.map.getCenter()
+    this.props.onMoveEnd({ bounds, position })
   }
 
   getGridLayer() {
@@ -96,9 +85,14 @@ export default class ParcelsMap extends React.Component {
     return tiles;
   }
 
-  getCenter() {
+  getInitialCenter() {
     const { x, y } = this.props;
-    return isNaN(x) ? new L.LatLng(0, 0) : point.cartesianToLatLng({ x, y });
+    const { lat, lng } = this.props;
+    return (!x || isNaN(x)) ? new L.LatLng(lat || 0, lng || 0) : point.cartesianToLatLng({ x, y });
+  }
+
+  panTo(x, y) {
+    this.map.panTo(point.cartesianToLatLng({ x, y }))
   }
 
   bindMap(container) {
@@ -129,10 +123,27 @@ function createTile(parcelData, coords) {
   const tile = L.DomUtil.create("div", "leaflet-tile");
   const x = coords.x - OFFSET
   const y = coords.y - OFFSET
+
+  const unclaimed = "#EAEAEA";
+  const own = '#30D7A9';
+  const other = '#7FA8FF';
+  let color = unclaimed;
+
   const parcel = parcelData[`${x},${y}`]
   if (parcel) {
     if (parcel.owner !== NO_OWNER) {
-      tile.innerHTML = `${x}, ${y}<br/>0x${formatOwner(parcel.owner)}<br/>content: ${parcel.metadata}`
+      if (parcel.owner === ethService.address) {
+        color = own;
+      } else {
+        color = other;
+      }
+      ReactDOM.render(<div>
+        {x}, {y}
+        <br/>
+        0x{formatOwner(parcel.owner)}
+        <br/>
+        content: {parcel.metadata}
+      </div>, tile)
     } else {
       tile.innerHTML = `${x}, ${y}, unclaimed`
     }
@@ -141,9 +152,10 @@ function createTile(parcelData, coords) {
   }
   const size = this.getTileSize();
 
+
   tile.style.width = size.x;
   tile.style.height = size.y;
-  tile.style.backgroundColor = "#EAEAEA";
+  tile.style.backgroundColor = color;
   tile.style.border = "1px solid #FFF";
 
   return tile;

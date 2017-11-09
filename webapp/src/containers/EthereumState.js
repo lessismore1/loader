@@ -10,7 +10,7 @@ class EthereumState extends React.Component {
   render() {
     if (this.props.success) {
       return <div className='ethereum'>
-        <div>Connected</div>
+        <div><strong>Ethereum State</strong>: Connected</div>
         <Balance />
       </div>
     }

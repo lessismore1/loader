@@ -1,17 +1,17 @@
 {
   "contract_name": "LANDTestSale",
-  "address": "0x8458ff5ec3d711681ff3a9813b5ff0a8a57dd9fe",
+  "address": "0xb3211cbeba3a2870cdd332a3e1c77555f53de7dd",
   "abi": [
     {
       "constant": false,
       "inputs": [
         {
           "name": "_x",
-          "type": "int256"
+          "type": "uint256"
         },
         {
           "name": "_y",
-          "type": "int256"
+          "type": "uint256"
         },
         {
           "name": "_data",

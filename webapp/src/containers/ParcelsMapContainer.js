@@ -9,13 +9,15 @@ import ParcelsMap from "../components/ParcelsMap";
 class ParcelsMapContainer extends React.Component {
   constructor(...args) {
     super(...args)
-    this.onMoveEnd = ({ bounds }) => {
+    this.state = { x: 0, y: 0 }
+    this.onMoveEnd = ({ bounds, position }) => {
       this.props.parcelRangeChange(
         Math.min(bounds.min.x, bounds.max.x),
         Math.max(bounds.min.x, bounds.max.x),
         Math.min(bounds.min.y, bounds.max.y),
         Math.max(bounds.min.y, bounds.max.y)
       )
+      this.setState(position)
     }
     this.onClick = (x, y) => {
       this.props.clickParcel(x, y)
@@ -27,9 +29,9 @@ class ParcelsMapContainer extends React.Component {
   }
 
   render() {
+    const coors = this.state.lat ? this.state : { x: 0, y : 0 }
     return <ParcelsMap
-      x={0}
-      y={0}
+      {...coors}
       zoom={10}
       bounds={[[-120.5, -20.5], [120.5, 20.5]]}
       tileSize={128}

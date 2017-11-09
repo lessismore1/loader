@@ -5,5 +5,8 @@
 }
 
 .leaflet-tile {
+  font-family: 'Source Sans Pro';
   transform: translateZ(0);
+  text-align: center;
+  padding-top: 30px;
 }

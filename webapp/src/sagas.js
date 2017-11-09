@@ -72,15 +72,18 @@ export function* fetchParcel(action) {
 }
 
 export function* fetchBalance(action) {
-  const amount = yield call(async () => await ethService.getBalance())
-  yield put({ type: types.fetchBalance.loadedBalance, amount })
-  for (let i = 0; i < amount; i++) {
-    try {
-      const parcel = yield call(async () => await ethService.getOwnedParcel(i))
-      yield put({ type: types.balanceParcel.success, parcel, index: i })
-    } catch (error) {
-      yield put({ type: types.balanceParcel.error, error })
-    }
+  try {
+    const amount = yield call(async () => await ethService.getBalance())
+    yield put({ type: types.fetchBalance.loadedBalance, amount })
+  } catch (error) {
+    yield put({ type: types.fetchBalance.failed, error: error.message, stack: error.stack })
+    return
+  }
+  try {
+    const parcels = yield call(async () => await ethService.getOwnedParcels())
+    yield put({ type: types.balanceParcel.success, parcels })
+  } catch (error) {
+    yield put({ type: types.balanceParcel.failed, error: error.message, stack: error.stack })
   }
 }
 

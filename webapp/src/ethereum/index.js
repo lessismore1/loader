@@ -45,7 +45,7 @@ class Ethereum {
   }
 
   buyParcel(x, y) {
-    return this.methods.buy(x, y, '')
+    return this.methods.buy(x, y, '[]')
   }
 
   getBalance() {
@@ -87,9 +87,21 @@ class Ethereum {
     return Promise.all(parcels.map(parcel => this.getParcelData(parcel.x, parcel.y)))
   }
 
+  async getOwnedParcels() {
+    const amount = await this.getBalance()
+    const result = []
+    for (let i = 0; i < amount; i ++) {
+      result.push(await this.getOwnedParcel(i))
+    }
+    console.log('result is', result)
+    return result
+  }
+
   async getOwnedParcel(index) {
     const hash = await this.methods.tokenByIndex(this.address, index)
+    console.log(hash, 'hey', reverseHash[hash])
     const { x, y } = reverseHash[hash]
+    console.log(index, hash, x, y)
     return {
       x,
       y,

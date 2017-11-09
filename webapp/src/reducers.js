@@ -29,20 +29,13 @@ function balance(state = {}, action) {
     case types.fetchBalance.request:
       return { loading: true, amount: 0 }
     case types.fetchBalance.loadedBalance:
-      return { loading: false, amount: action.amount, parcels: {}, loaded: 0 }
+      return { loading: false, amount: action.amount, parcels: Array.from(Array(action.amount)), loaded: 0 }
     case types.balanceParcel.success:
-      return { ...state,
-        loaded: state.loaded + 1,
-        parcels: Object.assign({}, state.parcels, action.parcel.hash: action.parcel)
-      }
+      return { ...state, parcels: action.parcels }
     case types.balanceParcel.error:
-      return { ...state,
-        parcels: Object.assign({}, state.parcels, action.parcel.hash: { error: action.error })
-      }
+      return { ...state, error: action.error }
     case types.fetchBalance.error:
-      return { ...state,
-        error: action.error
-      }
+      return { ...state, error: action.error }
     default:
       return state
   }
