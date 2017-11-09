@@ -36,3 +36,17 @@ export function buyParcel(x, y) {
     y
   }
 }
+
+export function selectLand(id) {
+  return {
+    type: types.selectLand,
+    id
+  }
+}
+
+export function launchEditor(parcels) {
+  return {
+    type: types.launchEditor,
+    parcels
+  }
+}

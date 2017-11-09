@@ -33,16 +33,20 @@ class ParcelsMapContainer extends React.Component {
     return <ParcelsMap
       {...coors}
       zoom={10}
-      bounds={[[-120.5, -20.5], [120.5, 20.5]]}
+      bounds={[[-25.5, -25.5], [25.5, 25.5]]}
       tileSize={128}
       onClick={this.onClick}
       onMoveEnd={this.onMoveEnd}
       parcelData={this.props.parcelStates}
+      selectedData={this.props.selectedData}
     />
   }
 }
 
 export default connect(
-  state => ({ parcelStates: selectors.getParcelStates(state) }),
+  state => ({
+    parcelStates: selectors.getParcelStates(state),
+    selectedData: selectors.getSelectedLands(state)
+  }),
   { parcelRangeChange, clickParcel }
 )(ParcelsMapContainer);

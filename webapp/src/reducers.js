@@ -4,6 +4,7 @@ export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
   balance: state => state.balance,
+  getSelectedLands: state => state.balance.selected,
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,
@@ -24,14 +25,18 @@ function ethereum(state = { loading: true }, action) {
   }
 }
 
-function balance(state = {}, action) {
+function balance(state = { selected: {} }, action) {
   switch (action.type) {
     case types.fetchBalance.request:
-      return { loading: true, amount: 0 }
+      return { ...state, loading: true, amount: 0 }
     case types.fetchBalance.loadedBalance:
-      return { loading: false, amount: action.amount, parcels: Array.from(Array(action.amount)), loaded: 0 }
+      return { ...state, loading: false, amount: action.amount }
     case types.balanceParcel.success:
       return { ...state, parcels: action.parcels }
+    case types.selectLand:
+      const newSelected = { ...state.selected }
+      newSelected[action.id] = !newSelected[action.id]
+      return { ...state, selected: newSelected }
     case types.balanceParcel.error:
       return { ...state, error: action.error }
     case types.fetchBalance.error:
@@ -44,17 +49,15 @@ function balance(state = {}, action) {
 function parcelStates(state = {}, action) {
   switch (action.type) {
     case types.loadParcel.request:
-      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: { loading: true } }
+      return { ...state, loading: true }
     case types.loadParcel.many:
-      const newState = {...state}
+      const newState = { ...state, loading: false }
       action.parcels.forEach(parcel => {
         newState[`${parcel.x},${parcel.y}`] = parcel
       })
       return newState
-    case types.loadParcel.success:
-      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: action.parcel }
     case types.loadParcel.failed:
-      return { ...state, [`${action.parcel.x},${action.parcel.y}`]: { error: action.error } }
+      return { ...state, error: action.error }
     default:
       return state
   }

@@ -77,10 +77,10 @@ export default class ParcelsMap extends React.Component {
   }
 
   getGridLayer() {
-    const { tileSize, parcelData } = this.props;
+    const { tileSize, parcelData, selectedData } = this.props;
     const tiles = new L.GridLayer({ tileSize });
 
-    tiles.createTile = createTile.bind(tiles, parcelData);
+    tiles.createTile = createTile.bind(tiles, parcelData, selectedData);
 
     return tiles;
   }
@@ -119,7 +119,8 @@ const OFFSET = 1024;
 const NO_OWNER = '0x0000000000000000000000000000000000000000'
 
 const formatOwner = owner => owner.substr(2, 4) + '...' + owner.substr(38, 4)
-function createTile(parcelData, coords) {
+
+function createTile(parcelData, selectedData, coords) {
   const tile = L.DomUtil.create("div", "leaflet-tile");
   const x = coords.x - OFFSET
   const y = coords.y - OFFSET
@@ -151,12 +152,14 @@ function createTile(parcelData, coords) {
     tile.innerHTML = `${x}, ${y}<br/>loading...`
   }
   const size = this.getTileSize();
-
+  const selected = !!(selectedData && selectedData[`${x}, ${y}`])
 
   tile.style.width = size.x;
   tile.style.height = size.y;
   tile.style.backgroundColor = color;
-  tile.style.border = "1px solid #FFF";
+  const notSelectedBorder = "1px solid #FFF";
+  const selectedBorder = "3px solid #962f2f";
+  tile.style.border = selected ? selectedBorder : notSelectedBorder;
 
   return tile;
 }
