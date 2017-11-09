@@ -7,41 +7,32 @@ import reverseHash from './reverseHash'
 
 class Ethereum {
   async init() {
-    const provider = await this.getWeb3Provider()
+    const provider = await this.getProvider()
     if (!provider) {
       return false
     }
-    this._web3 = new Web3(provider)
 
-    this.land = new this._web3.Contract(land.abi, land.address)
+    this._web3 = new Web3(provider)
+    const address = (await this._web3.eth.getAccounts())[0]
+    if (!address) {
+      return false
+    }
+
+    this.land = new this._web3.eth.Contract(land.abi, land.address)
     this.land.address = land.address
 
-    this.sale = new this._web3.Contract(sale.abi, sale.address)
+    this.sale = new this._web3.eth.Contract(sale.abi, sale.address)
     this.sale.address = sale.address
+
+    return true
   }
 
-  getProvider() {
+  async getProvider() {
     if (typeof window.web3 === 'undefined') {
-      // Support Ledger Wallet
-      let engine = new ProviderEngine()
-      let ledgerWalletSubProvider = await LedgerWalletSubprovider(`44'/60'/0'/0`)
-
-      engine.addProvider(ledgerWalletSubProvider)
-      engine.addProvider(
-        new RpcSubprovider({
-          rpcUrl: 'https://mainnet.infura.io/'
-        })
-      )
-      engine.start()
-
-      return engine
+      return env.get('REACT_APP_ETHEREUM_PROVIDER')
     }
 
     return window.web3 && window.web3.currentProvider
-  }
-
-  get address() {
-    return this._web3.eth.accounts[0]
   }
 
   buyParcel(x, y) {

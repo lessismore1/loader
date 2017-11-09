@@ -5,7 +5,7 @@ import { Provider } from "react-redux";
 import { Route } from "react-router";
 import { ConnectedRouter } from "react-router-redux";
 
-import App from "./App";
+import App from "./containers/App";
 import { store, history } from "./store";
 import "./index.css";
 
