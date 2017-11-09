@@ -21,7 +21,8 @@
   "rules": {
     "prettier/prettier": "error",
     "no-console": 0,
-    "no-unused-vars": ["error", {
+    "react/prop-types": 0,
+    "no-unused-vars": ["warn", {
       "vars": "all",
       "args": "none",
       "ignoreRestSiblings": false

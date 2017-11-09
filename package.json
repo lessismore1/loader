@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "💾 Testnet land manager",
   "main": "src/server.js",
+  "homepage" : "https://decentraland.github.io/loader",
   "scripts": {
     "docs": "npx jsdoc -c conf.json -r src/**/*.js",
     "lint": "npx eslint src/",

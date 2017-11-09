@@ -26,6 +26,7 @@ function ethereum(state = { loading: true }, action) {
 }
 
 function balance(state = { selected: {} }, action) {
+  let newSelected;
   switch (action.type) {
     case types.fetchBalance.request:
       return { ...state, loading: true, amount: 0 };
@@ -34,7 +35,7 @@ function balance(state = { selected: {} }, action) {
     case types.balanceParcel.success:
       return { ...state, parcels: action.parcels };
     case types.selectLand:
-      const newSelected = { ...state.selected };
+      newSelected = { ...state.selected };
       newSelected[action.id] = !newSelected[action.id];
       return { ...state, selected: newSelected };
     case types.balanceParcel.error:
@@ -47,11 +48,12 @@ function balance(state = { selected: {} }, action) {
 }
 
 function parcelStates(state = {}, action) {
+  let newState;
   switch (action.type) {
     case types.loadParcel.request:
       return { ...state, loading: true };
     case types.loadParcel.many:
-      const newState = { ...state, loading: false };
+      newState = { ...state, loading: false };
       action.parcels.forEach(parcel => {
         newState[`${parcel.x},${parcel.y}`] = parcel;
       });
