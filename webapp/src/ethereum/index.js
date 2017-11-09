@@ -1,6 +1,7 @@
+import Web3 from 'web3'
 import { env } from 'decentraland-commons'
-import land from './land.json'
-import sale from './sale.json'
+import land from './LANDToken.json'
+import sale from './LANDTestSale.json'
 
 class Ethereum {
   init() {
@@ -12,6 +13,9 @@ class Ethereum {
     this.sale = new this._web3.Contract(sale.abi, sale.address)
     this.sale.address = sale.address
   }
+  get address() {
+    return this._web3.eth.accounts[0]
+  }
   buyParcel(x, y) {
     return this.sale.buy(x, y, '')
   }
@@ -19,9 +23,8 @@ class Ethereum {
     return {
       x,
       y,
-      owner: await this.land.ownerOfLand(x, y),
+      owner: await this.land.landOwner(x, y),
       metadata: await this.land.landMetadata(x, y)
-    }
   }
 }
 
