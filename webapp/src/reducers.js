@@ -8,7 +8,8 @@ export const selectors = {
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,
-    parcel: state.parcelStates[`${state.displayMenu.x},${state.displayMenu.y}`]
+    parcel: state.parcelStates[`${state.displayMenu.x},${state.displayMenu.y}`],
+    purchasing: state.displayMenu.purchasing
   })
 };
 
@@ -52,6 +53,10 @@ function parcelStates(state = {}, action) {
   switch (action.type) {
     case types.loadParcel.request:
       return { ...state, loading: true };
+    case types.loadParcel.success:
+      newState = { ...state, loading: false };
+      newState[`${action.parcel.x},${action.parcel.y}`] = action.parcel;
+      return newState;
     case types.loadParcel.many:
       newState = { ...state, loading: false };
       action.parcels.forEach(parcel => {
@@ -69,6 +74,12 @@ function displayMenu(state = {}, action) {
   switch (action.type) {
     case types.click:
       return { x: action.x, y: action.y };
+    case types.purchasingParcel:
+      return { ...state, purchasing: true };
+    case types.buyParcel.success:
+      return { ...state, purchasing: false };
+    case types.buyParcel.failed:
+      return { ...state, purchasing: false };
     default:
       return state;
   }

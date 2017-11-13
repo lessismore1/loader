@@ -59,11 +59,13 @@ export function* connectWeb3() {
 
 export function* buyParcel(action) {
   try {
+    yield put({ type: types.purchasingParcel });
     const result = yield call(
       async () => await ethService.buyParcel(action.x, action.y)
     );
     if (result) {
       yield put({ type: types.buyParcel.success, x: action.x, y: action.y });
+      yield put({ type: types.loadParcel.request, x: action.y, y: action.y });
     } else {
       yield put({ type: types.buyParcel.failed });
     }
@@ -123,7 +125,6 @@ export function* fetchBoard(action) {
       parcels.push({ x: x + avgX, y: y + avgY });
     }
   }
-  console.log(parcels);
   try {
     const result = yield call(async () => await ethService.getMany(parcels));
     yield put({ type: types.loadParcel.many, parcels: result });
@@ -132,4 +133,6 @@ export function* fetchBoard(action) {
   }
 }
 
-export function* launchEditor(action) {}
+export function * launchEditor (action) {
+  console.log(action)
+}

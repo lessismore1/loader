@@ -33,5 +33,6 @@ export default {
   parcelRangeChanged: "Parcel range changed",
   launchEditor: "Launch editor requested",
   click: "Clicked",
-  selectLand: "Select Land"
+  selectLand: "Select Land",
+  purchasingParcel: "Purchasing Parcel"
 };
