@@ -44,12 +44,14 @@ export function getBalance(state) {
   return state.balance
 }
 
+export const getSelectedLands = createSelector(getBalance, balance => balance.selected)
+
 export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
   balance: getBalance,
-  getSelectedLands: state => state.balance.selected,
-  selectedParcelsAreConnected: createSelector(getBalance, selectedParcelsAreConnected),
+  getSelectedLands: getSelectedLands,
+  selectedParcelsAreConnected: createSelector(getSelectedLands, selectedParcelsAreConnected),
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,

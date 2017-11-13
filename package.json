@@ -1,43 +1,42 @@
 {
-  "name": "decentraland-loader",
-  "version": "1.0.0",
-  "description": "💾 Testnet land manager",
-  "main": "src/server.js",
-  "homepage" : "https://decentraland.github.io/loader",
+  "name": "webapp",
+  "version": "0.1.0",
+  "homepage": "https://decentraland.github.io/loader",
   "scripts": {
-    "docs": "npx jsdoc -c conf.json -r src/**/*.js",
+    "start": "react-scripts start",
+    "pretest": "npm run lint",
     "lint": "npx eslint src/",
-    "test": "npx mocha -r babel-register -r specs/spec_utils.js specs/*",
-    "start": "babel-node src/server.js"
+    "test": "react-scripts test --env=jsdom",
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/decentraland/loader"
-  },
-  "keywords": [
-    "decentraland",
-    "dapp"
-  ],
-  "author": "Decentraland",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "decentraland-commons": "git+https://github.com/decentraland/commons.git#release",
-    "express": "^4.16.2",
-    "redux-saga": "^0.16.0"
+    "es6-promisify": "^5.0.0",
+    "history": "^4.7.2",
+    "leaflet": "^1.2.0",
+    "promisify-node": "^0.4.0",
+    "prop-types": "^15.5.10",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "react-redux": "^5.0.6",
+    "react-router-redux": "^5.0.0-alpha.6",
+    "react-scripts": "1.0.14",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.16.0",
+    "redux-thunk": "^2.2.0",
+    "reselect": "^3.0.1",
+    "web3": "^1.0.0-beta.24",
+    "web3-provider-engine": "git+https://github.com/decentraland/provider-engine.git#releases"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.6.0",
-    "babel-register": "^6.26.0",
-    "chai": "^4.1.2",
-    "eslint": "^4.8.0",
+    "eslint": "^4.2.0",
     "eslint-config-prettier": "^2.6.0",
     "eslint-plugin-prettier": "^2.3.1",
-    "jsdoc": "^3.5.5",
-    "mocha": "^4.0.1",
+    "eslint-plugin-react": "^7.4.0",
+    "gh-pages": "^1.0.0",
     "prettier": "^1.7.4"
   }
 }
