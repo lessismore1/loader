@@ -1,8 +1,9 @@
-import React from "react";
-import { connect } from "react-redux";
+import React from 'react';
+import { connect } from 'react-redux';
 
-import { selectors } from "../reducers";
-import { selectLand, launchEditor } from "../actions";
+import { selectors } from '../reducers';
+import { selectLand, launchEditor } from '../actions';
+import adjacencyTest from '../lib/AdjacencyTest';
 
 class Balance extends React.Component {
   constructor (...args) {
@@ -21,21 +22,39 @@ class Balance extends React.Component {
     return this.onChanges[id];
   }
 
-  renderBalance () {
-    const renderLaunch = Object.values(this.props.selected).reduce(
+  get anySelected () {
+    return Object.values(this.props.selected).reduce(
       (prev, next) => prev || next,
       false
     );
+  }
+
+  get validSelection () {
+    var parcels = Object.keys(this.props.selected).map((key) => {
+      const [x, y] = key.split(', ').map(parseInt);
+      return { x, y };
+    });
+
+    return adjacencyTest(parcels);
+  }
+
+  renderBalance () {
+    var action;
+
+    if (this.anySelected && this.validSelection) {
+      action = <div className='launch-editor'>
+        {' '}
+        <button onClick={this.launchEditor}>Launch Editor</button>
+      </div>;
+    } else if (this.anySelected) {
+      action = <p>All parcels must be contiguous and share an edge (no diagonal parcels)</p>
+    }
+
     return (
       <div>
         <div>Balance: {this.props.amount} LAND</div>
-        <ul className="land-list">{this.renderList()}</ul>
-        {renderLaunch && (
-          <div className="launch-editor">
-            {" "}
-            <button onClick={this.launchEditor}>Launch Editor</button>
-          </div>
-        )}
+        <ul className='land-list'>{this.renderList()}</ul>
+        { action }
       </div>
     );
   }
