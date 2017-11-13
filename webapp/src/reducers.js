@@ -13,6 +13,8 @@ export const selectors = {
   })
 };
 
+const EDITOR_PATH = 'https://editor.decentraland.org';
+
 function ethereum(state = { loading: true }, action) {
   switch (action.type) {
     case types.connectWeb3.request:
@@ -80,6 +82,9 @@ function displayMenu(state = {}, action) {
       return { ...state, purchasing: false };
     case types.buyParcel.failed:
       return { ...state, purchasing: false };
+    case types.launchEditor:
+      window.open(`${EDITOR_PATH}/scene/new?parcels=${JSON.stringify(action.parcels)}`);
+      return { ...state };
     default:
       return state;
   }

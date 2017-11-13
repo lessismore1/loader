@@ -10,9 +10,7 @@ class Balance extends React.Component {
     super(...args);
     this.onChanges = {};
     this.launchEditor = () =>
-      this.props.launchEditor(
-        Object.keys(this.props.selected).filter(key => this.props.selected[key])
-      );
+      this.props.launchEditor(this.parcelArray);
   }
 
   getOnChange (id) {
@@ -22,14 +20,7 @@ class Balance extends React.Component {
     return this.onChanges[id];
   }
 
-  get anySelected () {
-    return Object.values(this.props.selected).reduce(
-      (prev, next) => prev || next,
-      false
-    );
-  }
-
-  get validSelection () {
+  get parcelArray () {
     const parcels = [];
 
     Object.keys(this.props.selected).map((key) => {
@@ -40,7 +31,15 @@ class Balance extends React.Component {
       }
     });
 
-    return adjacencyTest(parcels);
+    return parcels;
+  }
+
+  get anySelected () {
+    return this.parcelArray.length > 0;
+  }
+
+  get validSelection () {
+    return adjacencyTest(this.parcelArray);
   }
 
   renderBalance () {
