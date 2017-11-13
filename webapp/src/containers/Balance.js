@@ -39,7 +39,7 @@ class Balance extends React.Component {
   }
 
   get validSelection () {
-    return adjacencyTest(this.parcelArray);
+    return this.props.selectedAdjacent
   }
 
   renderBalance () {
@@ -97,6 +97,13 @@ class Balance extends React.Component {
     );
   }
 }
-export default connect(selectors.balance, { selectLand, launchEditor })(
+export default connect(state => {
+  const props = selectors.balance(state)
+  props.selectedAdjacent = selectors.selectedParcelsAreConnected(state)
+  return props
+}, {
+  selectLand,
+  launchEditor
+})(
   Balance
 );
