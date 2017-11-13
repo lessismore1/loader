@@ -1,4 +1,5 @@
 import types from "./types";
+import { createSelector } from 'reselect'
 
 const DX = [0, 1, 0, -1];
 const DY = [1, 0, -1, 0];
@@ -11,8 +12,8 @@ const neighbors = item => {
   return results
 }
 
-export function selectedParcelsAreConnected(state) {
-  const selected = Object.keys(state.balance.selected).filter(key => state.balance.selected[key])
+export function selectedParcelsAreConnected(selectedParcels) {
+  const selected = Object.keys(selectedParcels).filter(key => selectedParcels[key])
   const visited = {}
   const buildKey = parcel => `${parcel.x}, ${parcel.y}`
   const buildXYFromRegexMatch = regexMatch => ({ x: regexMatch[1], y: regexMatch[2] })
@@ -39,12 +40,16 @@ export function selectedParcelsAreConnected(state) {
   return Object.keys(visited).length === selected.length
 }
 
+export function getBalance(state) {
+  return state.balance
+}
+
 export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
-  balance: state => state.balance,
+  balance: getBalance,
   getSelectedLands: state => state.balance.selected,
-  selectedParcelsAreConnected,
+  selectedParcelsAreConnected: createSelector(getBalance, selectedParcelsAreConnected),
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,
