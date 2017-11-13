@@ -1,5 +1,18 @@
 ![](https://raw.githubusercontent.com/decentraland/web/gh-pages/img/decentraland.ico)
 
-# WebApp Boilerplate
+# Land Manager
 
-Starting point for Decentraland webapps
+## Installation
+
+(Install using npm [instead of](https://github.com/ethereum/web3.js/issues/966) yarn)
+
+ * `npm install`
+ * `cd webapp`
+ * `npm install`
+
+## Starting in dev mode
+)
+ * `npm start &`
+ * `cd webapp`
+ * `npm start`
+
