@@ -64,8 +64,9 @@ export function* buyParcel(action) {
       async () => await ethService.buyParcel(action.x, action.y)
     );
     if (result) {
+      yield fetchParcel({ x: action.x, y: action.y });
+      yield fetchBalance();
       yield put({ type: types.buyParcel.success, x: action.x, y: action.y });
-      yield put({ type: types.loadParcel.request, x: action.y, y: action.y });
     } else {
       yield put({ type: types.buyParcel.failed });
     }

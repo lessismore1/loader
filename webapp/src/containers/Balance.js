@@ -5,7 +5,7 @@ import { selectors } from "../reducers";
 import { selectLand, launchEditor } from "../actions";
 
 class Balance extends React.Component {
-  constructor(...args) {
+  constructor (...args) {
     super(...args);
     this.onChanges = {};
     this.launchEditor = () =>
@@ -13,13 +13,15 @@ class Balance extends React.Component {
         Object.keys(this.props.selected).filter(key => this.props.selected[key])
       );
   }
-  getOnChange(id) {
+
+  getOnChange (id) {
     if (!this.onChanges[id]) {
       this.onChanges[id] = ev => this.props.selectLand(id);
     }
     return this.onChanges[id];
   }
-  renderBalance() {
+
+  renderBalance () {
     const renderLaunch = Object.values(this.props.selected).reduce(
       (prev, next) => prev || next,
       false
@@ -37,7 +39,8 @@ class Balance extends React.Component {
       </div>
     );
   }
-  renderList() {
+
+  renderList () {
     return this.props.parcels.map(parcel => {
       const id = `${parcel.x}, ${parcel.y}`;
       return (
@@ -52,7 +55,8 @@ class Balance extends React.Component {
       );
     });
   }
-  render() {
+
+  render () {
     if (this.props.loading) {
       return <div>Loading balance...</div>;
     }
