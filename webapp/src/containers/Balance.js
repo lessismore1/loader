@@ -30,9 +30,14 @@ class Balance extends React.Component {
   }
 
   get validSelection () {
-    var parcels = Object.keys(this.props.selected).map((key) => {
-      const [x, y] = key.split(', ').map(parseInt);
-      return { x, y };
+    const parcels = [];
+
+    Object.keys(this.props.selected).map((key) => {
+      const [x, y] = key.split(',').map((i) => parseInt(i, 10));
+
+      if (this.props.selected[key]) {
+        parcels.push({ x, y });
+      }
     });
 
     return adjacencyTest(parcels);
@@ -65,7 +70,7 @@ class Balance extends React.Component {
       return (
         <li key={parcel.hash}>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={this.props.selected[id]}
             onChange={this.getOnChange(id)}
           />
