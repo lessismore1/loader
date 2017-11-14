@@ -72,7 +72,7 @@ function parcelStates(state = {}, action) {
   }
 }
 
-function displayMenu(state = {}, action) {
+function displayMenu (state = {}, action) {
   switch (action.type) {
     case types.click:
       return { x: action.x, y: action.y };
@@ -83,7 +83,11 @@ function displayMenu(state = {}, action) {
     case types.buyParcel.failed:
       return { ...state, purchasing: false };
     case types.launchEditor:
-      window.open(`${EDITOR_PATH}/scene/new?parcels=${JSON.stringify(action.parcels)}`);
+      const query = action.parcels.map((p) => {
+        return 'parcels[]=' + [p.x, p.y].join(',');
+      }).join('&');
+
+      window.open(`${EDITOR_PATH}/scene/new?${query}`);
       return { ...state };
     default:
       return state;
