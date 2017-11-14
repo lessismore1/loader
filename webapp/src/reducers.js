@@ -1,10 +1,50 @@
 import types from "./types";
 
+const DX = [0, 1, 0, -1];
+const DY = [1, 0, -1, 0];
+
+const neighbors = item => {
+  const results = []
+  for (let i = 0; i < DX.length; i++) {
+    results.push({ x: item.x - (-DX[i]), y: item.y - (-DY[i]) })
+  }
+  return results
+}
+
+export function selectedParcelsAreConnected(state) {
+  const selected = Object.keys(state.balance.selected).filter(key => state.balance.selected[key])
+  const visited = {}
+  const buildKey = parcel => `${parcel.x}, ${parcel.y}`
+  const buildXYFromRegexMatch = regexMatch => ({ x: regexMatch[1], y: regexMatch[2] })
+  const getCoors = key => buildXYFromRegexMatch(/(-?[0-9]+), ?(-?[0-9]+)/g.exec(key))
+  const queue = []
+
+  if (selected.length === 0) {
+    return false
+  }
+
+  visited[selected[0]] = true
+  queue.push(getCoors(selected[0]))
+
+  while (queue.length !== 0) {
+    const item = queue.pop()
+    for (let neighbor of neighbors(item)) {
+      const key = buildKey(neighbor)
+      if (!visited[key] && selected.includes(key)) {
+        visited[key] = true
+        queue.push(neighbor)
+      }
+    }
+  }
+  return Object.keys(visited).length === selected.length
+}
+
 export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
   balance: state => state.balance,
   getSelectedLands: state => state.balance.selected,
+  selectedParcelsAreConnected,
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,
