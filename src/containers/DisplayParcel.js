@@ -12,9 +12,11 @@ class Balance extends React.Component {
     super(...args);
     this.buy = () => this.props.buyParcel(this.props.x, this.props.y);
   }
-  
+
   renderBuy() {
-    const purchasing = this.props.purchasing && <p>Purchasing... (this may take some time)</p>
+    const purchasing = this.props.purchasing && (
+      <p>Purchasing... (this may take some time)</p>
+    );
 
     return (
       <div className="selected-parcel">
@@ -27,7 +29,7 @@ class Balance extends React.Component {
         <div>This parcel has no owner</div>
         <div className="buy-parcel">
           {" "}
-          { purchasing || <button onClick={this.buy}>Buy</button> }
+          {purchasing || <button onClick={this.buy}>Buy</button>}
         </div>
       </div>
     );

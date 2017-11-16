@@ -1,30 +1,28 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { selectors } from '../reducers';
-import { selectLand, launchEditor } from '../actions';
-import adjacencyTest from '../lib/AdjacencyTest';
+import { selectors } from "../reducers";
+import { selectLand, launchEditor } from "../actions";
 
 class Balance extends React.Component {
-  constructor (...args) {
+  constructor(...args) {
     super(...args);
     this.onChanges = {};
-    this.launchEditor = () =>
-      this.props.launchEditor(this.parcelArray);
+    this.launchEditor = () => this.props.launchEditor(this.parcelArray);
   }
 
-  getOnChange (id) {
+  getOnChange(id) {
     if (!this.onChanges[id]) {
       this.onChanges[id] = ev => this.props.selectLand(id);
     }
     return this.onChanges[id];
   }
 
-  get parcelArray () {
+  get parcelArray() {
     const parcels = [];
 
-    Object.keys(this.props.selected).map((key) => {
-      const [x, y] = key.split(',').map((i) => parseInt(i, 10));
+    Object.keys(this.props.selected).map(key => {
+      const [x, y] = key.split(",").map(i => parseInt(i, 10));
 
       if (this.props.selected[key]) {
         parcels.push({ x, y });
@@ -34,42 +32,48 @@ class Balance extends React.Component {
     return parcels;
   }
 
-  get anySelected () {
+  get anySelected() {
     return this.parcelArray.length > 0;
   }
 
-  get validSelection () {
-    return this.props.selectedAdjacent
+  get validSelection() {
+    return this.props.selectedAdjacent;
   }
 
-  renderBalance () {
+  renderBalance() {
     var action;
 
     if (this.anySelected && this.validSelection) {
-      action = <div className='launch-editor'>
-        {' '}
-        <button onClick={this.launchEditor}>Launch Editor</button>
-      </div>;
+      action = (
+        <div className="launch-editor">
+          {" "}
+          <button onClick={this.launchEditor}>Launch Editor</button>
+        </div>
+      );
     } else if (this.anySelected) {
-      action = <p>All parcels must be contiguous and share an edge (no diagonal parcels)</p>
+      action = (
+        <p>
+          All parcels must be contiguous and share an edge (no diagonal parcels)
+        </p>
+      );
     }
 
     return (
       <div>
         <div>Balance: {this.props.amount} LAND</div>
-        <ul className='land-list'>{this.renderList()}</ul>
-        { action }
+        <ul className="land-list">{this.renderList()}</ul>
+        {action}
       </div>
     );
   }
 
-  renderList () {
+  renderList() {
     return this.props.parcels.map(parcel => {
       const id = `${parcel.x}, ${parcel.y}`;
       return (
         <li key={parcel.hash}>
           <input
-            type='checkbox'
+            type="checkbox"
             checked={this.props.selected[id]}
             onChange={this.getOnChange(id)}
           />
@@ -79,7 +83,7 @@ class Balance extends React.Component {
     });
   }
 
-  render () {
+  render() {
     if (this.props.loading) {
       return <div>Loading balance...</div>;
     }
@@ -97,13 +101,14 @@ class Balance extends React.Component {
     );
   }
 }
-export default connect(state => {
-  const props = selectors.balance(state)
-  props.selectedAdjacent = selectors.selectedParcelsAreConnected(state)
-  return props
-}, {
-  selectLand,
-  launchEditor
-})(
-  Balance
-);
+export default connect(
+  state => {
+    const props = selectors.balance(state);
+    props.selectedAdjacent = selectors.selectedParcelsAreConnected(state);
+    return props;
+  },
+  {
+    selectLand,
+    launchEditor
+  }
+)(Balance);

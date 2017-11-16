@@ -1,57 +1,69 @@
 import types from "./types";
-import { createSelector } from 'reselect'
+import { createSelector } from "reselect";
 
 const DX = [0, 1, 0, -1];
 const DY = [1, 0, -1, 0];
 
 const neighbors = item => {
-  const results = []
+  const results = [];
   for (let i = 0; i < DX.length; i++) {
-    results.push({ x: item.x - (-DX[i]), y: item.y - (-DY[i]) })
+    results.push({ x: item.x - -DX[i], y: item.y - -DY[i] });
   }
-  return results
-}
+  return results;
+};
 
 export function selectedParcelsAreConnected(selectedParcels) {
-  const selected = Object.keys(selectedParcels).filter(key => selectedParcels[key])
-  const visited = {}
-  const buildKey = parcel => `${parcel.x}, ${parcel.y}`
-  const buildXYFromRegexMatch = regexMatch => ({ x: regexMatch[1], y: regexMatch[2] })
-  const getCoors = key => buildXYFromRegexMatch(/(-?[0-9]+), ?(-?[0-9]+)/g.exec(key))
-  const queue = []
+  const selected = Object.keys(selectedParcels).filter(
+    key => selectedParcels[key]
+  );
+  const visited = {};
+  const buildKey = parcel => `${parcel.x}, ${parcel.y}`;
+  const buildXYFromRegexMatch = regexMatch => ({
+    x: regexMatch[1],
+    y: regexMatch[2]
+  });
+  const getCoors = key =>
+    buildXYFromRegexMatch(/(-?[0-9]+), ?(-?[0-9]+)/g.exec(key));
+  const queue = [];
 
   if (selected.length === 0) {
-    return false
+    return false;
   }
 
-  visited[selected[0]] = true
-  queue.push(getCoors(selected[0]))
+  visited[selected[0]] = true;
+  queue.push(getCoors(selected[0]));
 
   while (queue.length !== 0) {
-    const item = queue.pop()
+    const item = queue.pop();
     for (let neighbor of neighbors(item)) {
-      const key = buildKey(neighbor)
+      const key = buildKey(neighbor);
       if (!visited[key] && selected.includes(key)) {
-        visited[key] = true
-        queue.push(neighbor)
+        visited[key] = true;
+        queue.push(neighbor);
       }
     }
   }
-  return Object.keys(visited).length === selected.length
+  return Object.keys(visited).length === selected.length;
 }
 
 export function getBalance(state) {
-  return state.balance
+  return state.balance;
 }
 
-export const getSelectedLands = createSelector(getBalance, balance => balance.selected)
+export const getSelectedLands = createSelector(
+  getBalance,
+  balance => balance.selected
+);
 
 export const selectors = {
   getParcelStates: state => state.parcelStates,
   ethereumState: state => state.ethereum,
   balance: getBalance,
   getSelectedLands: getSelectedLands,
-  selectedParcelsAreConnected: createSelector(getSelectedLands, selectedParcelsAreConnected),
+  selectedParcelsAreConnected: createSelector(
+    getSelectedLands,
+    selectedParcelsAreConnected
+  ),
   display: state => ({
     x: state.displayMenu.x,
     y: state.displayMenu.y,
@@ -60,7 +72,7 @@ export const selectors = {
   })
 };
 
-const EDITOR_PATH = 'https://editor.decentraland.org';
+const EDITOR_PATH = "https://editor.decentraland.org";
 
 function ethereum(state = { loading: true }, action) {
   switch (action.type) {
@@ -130,7 +142,9 @@ function displayMenu(state = {}, action) {
     case types.buyParcel.failed:
       return { ...state, purchasing: false };
     case types.launchEditor:
-      window.open(`${EDITOR_PATH}/scene/new?parcels=${JSON.stringify(action.parcels)}`);
+      window.open(
+        `${EDITOR_PATH}/scene/new?parcels=${JSON.stringify(action.parcels)}`
+      );
       return { ...state };
     default:
       return state;

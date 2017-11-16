@@ -8,6 +8,7 @@
   },
   "globals": {
     "document": true,
+    "console": true,
     "window": true
   },
   "parserOptions": {
@@ -20,8 +21,8 @@
   },
   "rules": {
     "prettier/prettier": "error",
-    "no-console": 0,
     "react/prop-types": 0,
+    "no-console": 0,
     "no-unused-vars": ["warn", {
       "vars": "all",
       "args": "none",

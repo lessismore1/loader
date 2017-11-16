@@ -31,7 +31,7 @@ export function* initialLoad() {
     connected: take(types.connectWeb3.success),
     moved: take(types.parcelRangeChanged)
   });
-  if (moved) {
+  if (!connected) {
     connected = yield take(types.connectWeb3.success);
   } else {
     moved = yield take(types.parcelRangeChanged);
@@ -134,6 +134,6 @@ export function* fetchBoard(action) {
   }
 }
 
-export function * launchEditor (action) {
-  console.log(action)
+export function* launchEditor(action) {
+  yield console.log(action);
 }
