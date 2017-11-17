@@ -2,43 +2,38 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/node:7.10
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo
-
+    working_directory: /tmp/my-project
     steps:
       - checkout
-
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
       - run: yarn install
-
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-
       - run: npm run build
+  deploy:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: /tmp/my-project
+    steps:
+      - run:
+          name: Deploy to S3 if tests pass and branch is Master
+          command: aws s3 sync build s3://decentraland-loader/ --delete
 
-  deployment:
-    production:
-      branch: master
-      codedeploy:
-        Loader:
-          application_root: /build
-          revision_location:
-            revision_type: S3
-            s3_location:
-              bucket: decentraland-loader
-              key_pattern: deploy-{SHORT_COMMIT}-{BUILD_NUM}
-          deployment_group: CodeDeployBGStack-qxnr3wf-LoaderAutoScalingGroup-JQNR6O4GZHRW
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
 
