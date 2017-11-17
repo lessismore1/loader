@@ -29,3 +29,18 @@ jobs:
 
       # run tests!
       - run: yarn test
+  deployment:
+    production:
+      branch: master
+      commands:
+        - npm run build
+      codedeploy:
+        Loader:
+          application_root: /build
+          revision_location:
+            revision_type: S3
+            s3_location:
+              bucket: decentraland-loader
+              key_pattern: deploy-{SHORT_COMMIT}-{BUILD_NUM}
+          deployment_group: CodeDeployBGStack-qxnr3wf-LoaderAutoScalingGroup-JQNR6O4GZHRW
+

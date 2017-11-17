@@ -1,7 +1,6 @@
 {
   "name": "webapp",
   "version": "0.1.0",
-  "homepage": "https://decentraland.github.io/loader",
   "scripts": {
     "start": "react-scripts start",
     "pretest": "npm run lint",

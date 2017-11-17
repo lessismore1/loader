@@ -21,7 +21,7 @@ class Balance extends React.Component {
   get parcelArray() {
     const parcels = [];
 
-    Object.keys(this.props.selected).map(key => {
+    Object.keys(this.props.selected).forEach(key => {
       const [x, y] = key.split(",").map(i => parseInt(i, 10));
 
       if (this.props.selected[key]) {
