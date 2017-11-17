@@ -32,7 +32,7 @@ jobs:
   deployment:
     production:
       branch: master
-      commands:
+      steps:
         - npm run build
       codedeploy:
         Loader:
