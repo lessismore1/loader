@@ -8,6 +8,7 @@
     "lint:fix": "npx eslint --fix src/",
     "test": "CI=true node scripts/test.js --env=jsdom",
     "build": "CI=true node scripts/build.js",
+    "remotebuild": "NODE_PATH=/tmp/loader/node_modules node scripts/build.js",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },

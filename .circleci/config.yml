@@ -3,7 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:7.10
-    working_directory: /tmp/my-project
+    working_directory: /tmp/loader
     steps:
       - checkout
       - restore_cache:
@@ -15,7 +15,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-      - run: npm run build
+      - run: npm run remotebuild
       - save_cache:
           paths:
             - build
@@ -23,14 +23,15 @@ jobs:
   deploy:
     docker:
       - image: circleci/node:7.10
-    working_directory: /tmp/my-project
+    working_directory: /tmp/loader
     steps:
       - restore_cache:
           keys:
           - build-{{ .Revision }}
+      - run: sudo apt-get -y -qq install awscli
       - run:
           name: Deploy to S3 if tests pass and branch is Master
-          command: aws s3 sync build s3://decentraland-loader/ --delete
+          command: aws s3 sync build s3://loader.decentraland.today/ --delete --acl public-read
 
 workflows:
   version: 2
