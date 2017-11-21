@@ -1,3 +1,4 @@
+import { env } from "decentraland-commons";
 import { delay } from "redux-saga";
 import {
   race,
@@ -11,6 +12,12 @@ import {
 import types from "./types";
 
 import ethService from "./ethereum";
+
+env.load();
+const EDITOR_URL = env.get(
+  "REACT_APP_EDITOR_URL",
+  "https://editor.decentraland.today"
+);
 
 export default function*() {
   yield takeEvery(types.connectWeb3.request, connectWeb3);
@@ -135,5 +142,7 @@ export function* fetchBoard(action) {
 }
 
 export function* launchEditor(action) {
-  yield console.log(action);
+  yield window.open(
+    `${EDITOR_URL}/scene/new?parcels=${JSON.stringify(action.parcels)}`
+  );
 }
