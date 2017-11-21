@@ -34,7 +34,7 @@ class Ethereum {
       balanceOf: call(this.land.methods, "balanceOf"),
       buildTokenId: async (x, y) =>
         (await call(this.land.methods, "buildTokenId")(x, y)).toString("hex"),
-      tokenByIndex: call(this.land.methods, "tokenByIndex"),
+      tokenOfOwnerByIndex: call(this.land.methods, "tokenOfOwnerByIndex"),
       landMetadata: call(this.land.methods, "landMetadata"),
       ownerOfLand: call(this.land.methods, "ownerOfLand")
     };
@@ -62,7 +62,7 @@ class Ethereum {
     const amount = await this.getBalance();
     const result = [];
     for (let i = 0; i < amount; i++) {
-      const hash = await this.methods.tokenByIndex(this.address, i);
+      const hash = await this.methods.tokenOfOwnerByIndex(this.address, i);
       const { x, y } = reverseHash[hash];
       result.push({
         x,
@@ -102,7 +102,7 @@ class Ethereum {
   }
 
   async getOwnedParcel(index) {
-    const hash = await this.methods.tokenByIndex(this.address, index);
+    const hash = await this.methods.tokenOfOwnerByIndex(this.address, index);
     console.log(hash, "hey", reverseHash[hash]);
     const { x, y } = reverseHash[hash];
     console.log(index, hash, x, y);
