@@ -142,12 +142,8 @@ export function* fetchBoard(action) {
 }
 
 export function* launchEditor(action) {
-  const parcels = action.parcels;
-  const parcelsArrayToString = parcels
-    .map(arr => `${arr.x},${arr.y}`)
-    .join(";");
-
+  const coordinates = action.parcels.join(';')
   yield window.open(
-    `${EDITOR_URL}/scene/new?parcels=${JSON.stringify(parcelsArrayToString)}`
+    `${EDITOR_URL}/scene/new?parcels=${coordinates}`
   );
 }
