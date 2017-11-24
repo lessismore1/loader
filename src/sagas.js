@@ -142,8 +142,8 @@ export function* fetchBoard(action) {
 }
 
 export function* launchEditor(action) {
-  const coordinates = action.parcels.join(';')
-  yield window.open(
-    `${EDITOR_URL}/scene/new?parcels=${coordinates}`
-  );
+  const coordinates = action.parcels
+    .map(coor => `${coor.x},${coor.y}`)
+    .join(";");
+  yield window.open(`${EDITOR_URL}/scene/new?parcels=${coordinates}`);
 }
