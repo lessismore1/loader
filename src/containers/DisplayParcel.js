@@ -39,6 +39,9 @@ class Balance extends React.Component {
       if (this.props.parcel.owner === NO_OWNER) {
         return this.renderBuy();
       }
+      const takingOver = this.props.purchasing && (
+        <p>Taking over... (this may take some time)</p>
+      );
       return (
         <div className="selected-parcel">
           <div>
@@ -52,6 +55,9 @@ class Balance extends React.Component {
           </div>
           <div>
             Data: <strong>{this.props.parcel.metadata}</strong>
+          </div>
+          <div className="buy-parcel">
+            {takingOver || <button onClick={this.buy}>Take Over</button>}
           </div>
         </div>
       );

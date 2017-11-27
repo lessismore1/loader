@@ -96,7 +96,7 @@ class Balance extends React.Component {
     }
     return (
       <div>
-        <strong>Loading balance...</strong>
+        <strong>{`You don't own any parcels right now.`}</strong>
       </div>
     );
   }
