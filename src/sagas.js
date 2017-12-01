@@ -145,5 +145,5 @@ export function* launchEditor(action) {
   const coordinates = action.parcels
     .map(coor => `${coor.x},${coor.y}`)
     .join(";");
-  yield window.open(`${EDITOR_URL}/scene/new?parcels=${coordinates}`);
+  yield window.open(`${EDITOR_URL}/new?parcels=${coordinates}`);
 }
