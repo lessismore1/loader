@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 
 import { selectors } from "../reducers";
-import { clickParcel, parcelRangeChange } from "../actions";
+import { clickParcel, parcelRangeChange, selectLand } from "../actions";
 
 import ParcelsMap from "../components/ParcelsMap";
 
@@ -40,6 +40,7 @@ class ParcelsMapContainer extends React.Component {
         onMoveEnd={this.onMoveEnd}
         parcelData={this.props.parcelStates}
         selectedData={this.props.selectedData}
+        selectLand={this.props.selectLand}
       />
     );
   }
@@ -50,5 +51,5 @@ export default connect(
     parcelStates: selectors.getParcelStates(state),
     selectedData: selectors.getSelectedLands(state)
   }),
-  { parcelRangeChange, clickParcel }
+  { parcelRangeChange, clickParcel, selectLand }
 )(ParcelsMapContainer);

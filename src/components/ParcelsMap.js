@@ -64,6 +64,11 @@ export default class ParcelsMap extends React.Component {
     const { x, y } = point.latLngToCartesian(event.latlng);
 
     this.props.onClick(x, y);
+
+    if (event.target.dragging.moved() === false) {
+      const id = `${x}, ${y}`;
+      this.props.selectLand(id);
+    }
   };
 
   onMapMoveEnd = event => {
